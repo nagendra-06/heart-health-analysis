@@ -56,4 +56,5 @@ The model uses the following features:
 ## How to Run
 
 - Install dependencies:
-   pip install pandas matplotlib scikit-learn
+
+  pip install pandas matplotlib scikit-learn
