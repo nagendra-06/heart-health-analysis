@@ -13,7 +13,7 @@ It demonstrates how data analysis and predictive modeling can assist in early de
 
 ---
 
-## ⚙️ Features
+## Features
 - Generates a dataset with 1000+ records
 - Performs data analysis using pandas
 - Visualizes patterns using matplotlib
