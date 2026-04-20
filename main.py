@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
-# Generate dataset (1000 rows)
+#Generate dataset (1000 rows)
 np.random.seed(42)
 n = 1000
 
@@ -16,23 +16,23 @@ data = pd.DataFrame({
     "heart_rate": np.random.randint(60, 110, n)
 })
 
-# Risk logic
+#Risk logic
 data["risk"] = (
     (data["age"] > 50) |
     (data["cholesterol"] > 240) |
     (data["bp"] > 150)
 ).astype(int)
 
-# Save dataset
+#Save dataset
 data.to_csv("data.csv", index=False)
 
 print("Dataset created with", len(data), "rows")
 
-# Analysis
+#Analysis
 print("\nAverages:")
 print(data.mean())
 
-# Graphs
+#Graphs
 plt.hist(data["age"])
 plt.title("Age Distribution")
 plt.show()
@@ -43,7 +43,7 @@ plt.xlabel("Cholesterol")
 plt.ylabel("BP")
 plt.show()
 
-# ML Model
+#ML Model
 X = data[["age", "cholesterol", "bp", "heart_rate"]]
 y = data["risk"]
 
@@ -56,7 +56,7 @@ pred = model.predict(X_test)
 
 print("\nAccuracy:", accuracy_score(y_test, pred))
 
-# Prediction function
+#Prediction function
 def predict_risk(age, cholesterol, bp, heart_rate):
     input_data = pd.DataFrame([[age, cholesterol, bp, heart_rate]],
                               columns=["age", "cholesterol", "bp", "heart_rate"])
