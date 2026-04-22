@@ -71,19 +71,43 @@ def health_status(heart_rate, bmi, bp):
 
 #VISUALIZATION
 def plot_results(sol, heart_rate, bmi, bp, cholesterol, age):
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+    fig.suptitle("Heart Health Dashboard", fontsize=16, fontweight="bold")
 
-    #Heart rate over time
-    axes[0].plot(sol.t, sol.y[0])
-    axes[0].set_title("Heart Rate Dynamics")
+    #HEART RATE DYNAMICS
+    hr = sol.y[0]
+    noise = np.random.normal(0, 1, len(hr))
+    hr = hr + noise
 
-    #Bar chart
-    factors = ["HR", "BMI", "BP", "Chol"]
+    axes[0].plot(sol.t, hr, linewidth=2)
+    axes[0].axhspan(60, 100, alpha=0.15)
+    axes[0].axhline(60, linestyle="--", linewidth=1)
+    axes[0].axhline(100, linestyle="--", linewidth=1)
+
+    axes[0].set_title("Heart Rate Over Time")
+    axes[0].set_xlabel("Time (seconds)")
+    axes[0].set_ylabel("BPM")
+    axes[0].grid(alpha=0.3)
+
+    #VITALS BAR
+    labels = ["HR", "BMI", "BP", "Chol"]
     values = [heart_rate, bmi, bp, cholesterol]
-    axes[1].bar(factors, values)
-    axes[1].set_title("Vitals")
 
-    #Risk score
+    colors = []
+    for v, l in zip(values, labels):
+        if (l == "HR" and (v < 60 or v > 100)) or \
+           (l == "BMI" and v > 30) or \
+           (l == "BP" and v > 140) or \
+           (l == "Chol" and v > 240):
+            colors.append("#ff4d4d")  # red
+        else:
+            colors.append("#4CAF50")  # green
+
+    axes[1].bar(labels, values, color=colors)
+    axes[1].set_title("Vitals Overview")
+    axes[1].grid(axis="y", alpha=0.3)
+
+    #RISK DONUT
     risk_score = sum([
         heart_rate > 100 or heart_rate < 50,
         bmi > 30,
@@ -91,11 +115,24 @@ def plot_results(sol, heart_rate, bmi, bp, cholesterol, age):
         cholesterol > 240,
         age > 50
     ])
-    axes[2].pie([risk_score, 5 - risk_score])
-    axes[2].set_title(f"Risk Score: {risk_score}/5")
+
+    colors = ["#ff4d4d", "#e0e0e0"]
+
+    axes[2].pie(
+        [risk_score, 5 - risk_score],
+        colors=colors,
+        startangle=90,
+        wedgeprops={"width": 0.4}
+    )
+
+    axes[2].text(0, 0, f"{risk_score}/5",
+                 ha="center", va="center",
+                 fontsize=18, fontweight="bold")
+
+    axes[2].set_title("Risk Score")
 
     plt.tight_layout()
-    plt.savefig("heart_report.png")
+    plt.savefig("heart_report.png", dpi=150)
     plt.show()
 
 #MAIN
